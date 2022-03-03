@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title></title>
+    <description>Blogging about stuffs</description>
+    <link>http://localhost:4000/kasper/</link>
+    <atom:link href="http://localhost:4000/kasper/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 02 Mar 2022 22:57:20 -0300</pubDate>
+    <lastBuildDate>Wed, 02 Mar 2022 22:57:20 -0300</lastBuildDate>
+    <generator>Jekyll v4.2.1</generator>
+    
+      <item>
+        <title>Instalando o Zabbix 6.0 com Docker Swarm em Alta Disponibilidade</title>
+        <description>&lt;p&gt;Vai!!!&lt;/p&gt;
+</description>
+        <pubDate>Mon, 02 Mar 2020 19:47:00 -0300</pubDate>
+        <link>http://localhost:4000/kasper/2020/03/02/zabbix-docker-swarm.html</link>
+        <guid isPermaLink="true">http://localhost:4000/kasper/2020/03/02/zabbix-docker-swarm.html</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Hello World!</title>
+        <description>&lt;h2&gt;Jekyllti&lt;/h2&gt;
+&lt;p&gt;Y Love You World s3&lt;/p&gt;
+</description>
+        <pubDate>Mon, 02 Mar 2020 19:26:00 -0300</pubDate>
+        <link>http://localhost:4000/kasper/2020/03/02/hello-world.html</link>
+        <guid isPermaLink="true">http://localhost:4000/kasper/2020/03/02/hello-world.html</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Welcome to Jekyll!</title>
+        <description>&lt;p&gt;You’ll find this post in your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory - edit this post and re-build (or run with the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-w&lt;/code&gt; switch) to see your changes!
+To add new posts, simply add a file in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention: YYYY-MM-DD-name-of-post.ext.&lt;/p&gt;
+
+&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Tom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints 'Hi, Tom' to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/mojombo/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Sun, 10 Nov 2013 07:18:00 -0300</pubDate>
+        <link>http://localhost:4000/kasper/thriller/comedy/horror/2013/11/10/welcome-to-jekyll.html</link>
+        <guid isPermaLink="true">http://localhost:4000/kasper/thriller/comedy/horror/2013/11/10/welcome-to-jekyll.html</guid>
+        
+        
+        <category>Thriller</category>
+        
+        <category>Comedy</category>
+        
+        <category>Horror</category>
+        
+      </item>
+    
+  </channel>
+</rss>
