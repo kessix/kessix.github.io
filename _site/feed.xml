@@ -3,10 +3,10 @@
   <channel>
     <title></title>
     <description>Blogging about stuffs</description>
-    <link>http://localhost:4000/kasper/</link>
-    <atom:link href="http://localhost:4000/kasper/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 02 Mar 2022 22:57:20 -0300</pubDate>
-    <lastBuildDate>Wed, 02 Mar 2022 22:57:20 -0300</lastBuildDate>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 02 Mar 2022 23:15:11 -0300</pubDate>
+    <lastBuildDate>Wed, 02 Mar 2022 23:15:11 -0300</lastBuildDate>
     <generator>Jekyll v4.2.1</generator>
     
       <item>
@@ -14,8 +14,8 @@
         <description>&lt;p&gt;Vai!!!&lt;/p&gt;
 </description>
         <pubDate>Mon, 02 Mar 2020 19:47:00 -0300</pubDate>
-        <link>http://localhost:4000/kasper/2020/03/02/zabbix-docker-swarm.html</link>
-        <guid isPermaLink="true">http://localhost:4000/kasper/2020/03/02/zabbix-docker-swarm.html</guid>
+        <link>http://localhost:4000/2020/03/02/zabbix-docker-swarm.html</link>
+        <guid isPermaLink="true">http://localhost:4000/2020/03/02/zabbix-docker-swarm.html</guid>
         
         
       </item>
@@ -26,8 +26,8 @@
 &lt;p&gt;Y Love You World s3&lt;/p&gt;
 </description>
         <pubDate>Mon, 02 Mar 2020 19:26:00 -0300</pubDate>
-        <link>http://localhost:4000/kasper/2020/03/02/hello-world.html</link>
-        <guid isPermaLink="true">http://localhost:4000/kasper/2020/03/02/hello-world.html</guid>
+        <link>http://localhost:4000/2020/03/02/hello-world.html</link>
+        <guid isPermaLink="true">http://localhost:4000/2020/03/02/hello-world.html</guid>
         
         
       </item>
@@ -49,8 +49,8 @@ To add new posts, simply add a file in the &lt;code class=&quot;language-plainte
 
 </description>
         <pubDate>Sun, 10 Nov 2013 07:18:00 -0300</pubDate>
-        <link>http://localhost:4000/kasper/thriller/comedy/horror/2013/11/10/welcome-to-jekyll.html</link>
-        <guid isPermaLink="true">http://localhost:4000/kasper/thriller/comedy/horror/2013/11/10/welcome-to-jekyll.html</guid>
+        <link>http://localhost:4000/thriller/comedy/horror/2013/11/10/welcome-to-jekyll.html</link>
+        <guid isPermaLink="true">http://localhost:4000/thriller/comedy/horror/2013/11/10/welcome-to-jekyll.html</guid>
         
         
         <category>Thriller</category>
