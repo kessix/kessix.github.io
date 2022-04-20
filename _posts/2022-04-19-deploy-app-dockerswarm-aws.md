@@ -4,7 +4,7 @@ title:  "Deployando Aplicação Web com Docker Swarm na AWS"
 date:   2022-04-19 11:11:00
 categories: 
 ---
-<br>
+
 
 #### Escopo
 
@@ -115,15 +115,12 @@ $ docker swarm init --advertise-addr 172.31.88.147 # IP node01
 ```
 
 A saída do comando terá as instruções para adicionar novos nós no swarm.
-Para que haja comunicação entre os nós do swarm libere as seguintes portas no Security Group da VPC.
+Para que haja comunicação entre os nós do swarm libere as seguintes portas no Security Group da VPC:
 
-`2377/tcp`
-
-`7946/tcp`
-
-`7946/udp`
-
-`4789/udp`
+- `2377/tcp`
+- `7946/tcp`
+- `7946/udp`
+- `4789/udp`
 
 `2. Obtendo token para adicionar o node02 e node03 como nós do tipo manager.`
 
@@ -131,7 +128,7 @@ Para que haja comunicação entre os nós do swarm libere as seguintes portas no
 $ docker swarm join-token manager
 ```
 
-Use a token para incluir os demais hosts no swarm.
+Use o token para incluir os demais hosts no swarm.
 
 `3. Para validar se os três hosts estão no swarm, use o comando:`
 
@@ -150,3 +147,37 @@ lb8wsbvq *  ip-172-31-88-147   Ready     Active         Leader
 Perceba que um dos hosts está com uma marcação `*`, isso além do próprio status, indica que esse nó é o líder do swarm. No momento que houve uma falha, o swarm automaticamente irá eleger um dos dois outros nós como líder.
 
 Nosso cluster já está pronto! Agora temos que configurar a partição onde ficará os dados do volume docker no AWS EFS e base da dados da aplicação no AWS RDS.
+
+##### Criando o Elastic File System (EFS)
+
+No menu stogare, no painel da AWS, crie um novo Elastic File System. Lembre de atribuir ao EFS a mesma VPC e Security Group onde foram criadas as instâncias do EC2 se conectem no sistema de arquivos.
+
+Name: `app-data-vol`
+
+Antes de conectar no EFS, instale o pacote cliente do NFS nos hosts, dessa forma eles poderão conectar no sistema de arquivos. 
+
+```bash
+$ apt install nfs-common
+```
+
+Primeiramente, crie nos três hosts do swarm um diretório com caminho `/mnt/app-data-vol/`. Copie o comando no painel do EFS para fazer o attach do sistema de arquivos nas instâncias EC2.
+
+O comando será algo parecido com:
+
+```bash
+$ sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 172.31.19.25:/ /mnt/app-data-vol/ # No comando tem o IP do EFS 
+```
+
+Provalmente, ocorrerá um erro de timeout na conexão da instância EC2 com o EFS, isso se deu devido não termos liberado a porta `2049` do protocolo NFSv4 no Security Group. Após esse ajuste, a conexão deve acontecer sem problemas.
+
+Ainda temos que resolver mais um detalhe, o comando mount que usamos, de fato, montará o sistema de arquivos em `/mnt/app-data-vol/`, porém a configuração só funcionará até que as intâncias forem reiniciadas. Para tornamos permante a montagem do EFS, devemos adicionar a configuração no arquivo `/etc/fstab` em cada um dos hosts.
+
+Veja o meu exemplo:
+
+```bash
+$ vim /etc/fstab
+```
+```bash
+172.31.19.25:/ /mnt/app-data-vol   nfs4    nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport     0 0
+```
+
