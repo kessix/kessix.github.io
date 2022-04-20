@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Deployando Aplicação Web com Docker Swarm na AWS"
+title:  "Deployando uma Aplicação Web com Docker Swarm na AWS"
 date:   2022-04-19 11:11:00
 categories: 
 ---
