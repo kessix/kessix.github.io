@@ -5,8 +5,8 @@
     <description>sysadmin explorando o mundo DevOps e Cloud Computing</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 20 Apr 2022 00:39:46 -0300</pubDate>
-    <lastBuildDate>Wed, 20 Apr 2022 00:39:46 -0300</lastBuildDate>
+    <pubDate>Wed, 20 Apr 2022 00:40:53 -0300</pubDate>
+    <lastBuildDate>Wed, 20 Apr 2022 00:40:53 -0300</lastBuildDate>
     <generator>Jekyll v3.8.6</generator>
     
       <item>
@@ -186,7 +186,7 @@ lb8wsbvq &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;  ip-172-31-88-147   Read
         <description>&lt;p&gt;Seja bem vindo ao meu blog estático com &lt;a href=&quot;https://github.com/mojombo/jekyll&quot;&gt;Jekyll&lt;/a&gt; e GitHub Pages!&lt;/p&gt;
 
 &lt;p&gt;O objetivo é usar esse espaço para compartilhar um pouco da minha experiência no mundo do DevOps, Linux e Cloud. 
-A maior parte dos conteúdos desse blog abordará temas do mundo Open Source, mas talvez, no furuto, outros assuntos intessantes possam surgir.&lt;/p&gt;
+A maior parte dos conteúdos desse blog abordará temas do mundo Open Source, mas talvez, no futuro, outros assuntos intessantes possam surgir.&lt;/p&gt;
 
 &lt;p&gt;Esse é meu primeiro contato com blog estático, mas já estou amando essa forma de escrever conteúdo, não só pelo fato de ser simples para criar novos posts, mas também por serem necessários poucos recursos para manter o blog no ar!&lt;/p&gt;
 
