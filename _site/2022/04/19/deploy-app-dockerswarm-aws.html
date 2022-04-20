@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>@kessix_ - sysadmin explorando o mundo DevOps e Cloud Computing</title>
+    <meta name="description" content="Jekyll Blog's" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <!-- Customisation  -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css " />
+
+</head>
+<body class="home-template">
+
+    <header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">Deployando Aplicação Web com Docker Swarm na AWS</h1>
+            <section class="post-meta">
+                
+                <time class="post-date" datetime="2022-04-19">19 Apr 2022</time>
+            </section>
+        </header>
+
+<!--         <header class="post-header">
+            <a id="blog-logo" href="http://localhost:4000">
+                
+                    <span class="blog-title">@kessix_</span>
+                
+            </a>
+        </header> -->
+
+        <!-- <span class="post-meta">
+            <time datetime="2022-04-19">19 Apr 2022</time>
+            
+        </span> -->
+
+        <!-- <h1 class="post-title">Deployando Aplicação Web com Docker Swarm na AWS</h1> -->
+
+        <section class="post-content">
+            <p><br /></p>
+
+<h4 id="escopo">Escopo</h4>
+
+<p>Vou demonstrar como fazer o deploy de uma aplicação web em cluster de Docker Swarm na AWS.
+Para alcançar esse objetivo, usarei as seguintes tecnologias:</p>
+
+<p>Docker (modo Swarm)</p>
+
+<p>As versões atuais do Docker incluem o modo swarm para gerenciar nativamente um cluster de Docker Engines chamado “swarm”. Apenas com a CLI do Docker é possível criar um swarm e implantar serviços (containers) em vários hosts docker que trabalham em cluster. Dessa forma, iremos usar cluster swarm para manter os containers da aplicação em alta disponibilidade, assim garantindo tolerência a falhas até mesmo se um dos hosts vier a cair.</p>
+
+<p>Amazon Elastic Compute Cloud (EC2)</p>
+
+<p>Amazon Elastic File System (EFS)</p>
+
+<p>Amazon Relational Database Service (RDS)</p>
+
+<p>Traefik</p>
+
+<h5 id="arquitetura">Arquitetura</h5>
+
+<p>imagem</p>
+
+<h4 id="hora-de-deployar">Hora de Deployar!</h4>
+
+<h5 id="configuração-das-instâncias-aws-ec2">Configuração das instâncias AWS EC2</h5>
+
+<p>O cluster do Swarm será composto por 3 instâncias do EC2, como sistema operacional base de cada instância 
+utilizei o Ubuntu 20.04.3 LTS.</p>
+
+<p>Instance Name</p>
+<ul>
+  <li>node03-swarm.us-east-1.prod.aws.godric.com</li>
+  <li>node02-swarm.us-east-1.prod.aws.godric.com</li>
+  <li>node01-swarm.us-east-1.prod.aws.godric.com</li>
+</ul>
+
+<p>Private IPv4</p>
+<ul>
+  <li>node01 - 172.31.88.147</li>
+  <li>node02 - 172.31.29.135</li>
+  <li>node03 - 172.31.26.68</li>
+</ul>
+
+<p>As três instâncias estão na mesma VPC (Virtual Private Cloud) sob o CIDR 172.31.0.0/16.
+Além disso, atrelado a VPC onde estão os hosts EC2, criei um Security Group para realizar as devidas liberações das portas dos serviços e protocolos.</p>
+
+<h5 id="configuração-do-docker-engine">Configuração do Docker Engine</h5>
+
+<p>Vou realizar a instalação do Docker Engine conforme a <a href="https://docs.docker.com/engine/install/ubuntu/">documentação</a> ofical do docker para Ubuntu Server. Essa configuração é válida para os três hosts EC2 que irão compor nosso swarm.</p>
+
+<p>Existem muitas maneiras de instalar o docker, mas usarei o metódo via repositórios do Docker e instalar a partir deles, para facilitar as tarefas de instalação e atualização. Esta é a abordagem recomendada.</p>
+
+<p><code class="highlighter-rouge">1. Atualize o índice de pacotes do apt e instale os pacotes para permitir que o apt use um repositório sobre HTTPS:</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt-get update
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="se">\</span>
+    ca-certificates <span class="se">\</span>
+    curl <span class="se">\</span>
+    gnupg <span class="se">\</span>
+    lsb-release
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">2. Adicione a chave GPG oficial do Docker:</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-fsSL</span> https://download.docker.com/linux/ubuntu/gpg | <span class="nb">sudo </span>gpg <span class="nt">--dearmor</span> <span class="nt">-o</span> /usr/share/keyrings/docker-archive-keyring.gpg
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">3. Use o comando a seguir para configurar o repositório estável. Para adicionar o repositório nightly ou test, adicione a palavra nightly ou test (ou ambos) após a palavra stable nos comandos abaixo.</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span> <span class="nb">echo</span> <span class="s2">"deb [arch=</span><span class="si">$(</span>dpkg <span class="nt">--print-architecture</span><span class="si">)</span><span class="s2"> signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu </span><span class="se">\</span><span class="s2">
+  </span><span class="si">$(</span>lsb_release <span class="nt">-cs</span><span class="si">)</span><span class="s2"> stable"</span> | <span class="nb">sudo tee</span> /etc/apt/sources.list.d/docker.list <span class="o">&gt;</span> /dev/null
+</code></pre></div></div>
+<p><code class="highlighter-rouge">4. Instalando o docker.</code></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt-get update
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt-get <span class="nb">install </span>docker-ce docker-ce-cli containerd.io
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">5. Verifique a versão do docker instalada.</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker <span class="nt">--version</span>
+</code></pre></div></div>
+
+<p>Realize a mesma configuração nas demais instâncias EC2.</p>
+
+<h5 id="configuração-do-docker-swarm">Configuração do Docker Swarm</h5>
+
+<p>No Swarm cada host pode assumir a função de worker, a entidade que executa as cargas de trabalho gerais ou manager, a entidade que gerencia o cluster swarm e executa cargas de trabalho relacionadas a gerência do mesmo.</p>
+
+<p>No nosso cenário, temos apenas 3 nós EC2 e dessa forma todos terão função de manager. Existem uma série de boas práticas a serem seguidas na criação de um cluster swarm, mas não irei abordar nesse artigo.</p>
+
+<p>Os próximos passos devem ser aplicados no node01:</p>
+
+<p><code class="highlighter-rouge">1. Ativando modo swarm no host.</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker swarm init <span class="nt">--advertise-addr</span> 172.31.88.147 <span class="c"># IP node01</span>
+</code></pre></div></div>
+
+<p>A saída do comando terá as instruções para adicionar novos nós no swarm.
+Para que haja comunicação entre os nós do swarm libere as seguintes portas no Security Group da VPC.</p>
+
+<p><code class="highlighter-rouge">2377/tcp</code></p>
+
+<p><code class="highlighter-rouge">7946/tcp</code></p>
+
+<p><code class="highlighter-rouge">7946/udp</code></p>
+
+<p><code class="highlighter-rouge">4789/udp</code></p>
+
+<p><code class="highlighter-rouge">2. Obtendo token para adicionar o node02 e node03 como nós do tipo manager.</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker swarm join-token manager
+</code></pre></div></div>
+
+<p>Use a token para incluir os demais hosts no swarm.</p>
+
+<p><code class="highlighter-rouge">3. Para validar se os três hosts estão no swarm, use o comando:</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker node <span class="nb">ls</span>
+</code></pre></div></div>
+
+<p>A saída deve ser algo parecido com:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ID          HOSTNAME           STATUS    AVAILABILITY   STATUS   
+fpi8hbnk    ip-172-31-26-68    Ready     Active         Reachable        
+qjp3jwr2    ip-172-31-29-135   Ready     Active         Reachable        
+lb8wsbvq <span class="k">*</span>  ip-172-31-88-147   Ready     Active         Leader           
+</code></pre></div></div>
+
+<p>Perceba que um dos hosts está com uma marcação <code class="highlighter-rouge">*</code>, isso além do próprio status, indica que esse nó é o líder do swarm. No momento que houve uma falha, o swarm automaticamente irá eleger um dos dois outros nós como líder.</p>
+
+<p>Nosso cluster já está pronto! Agora temos que configurar a partição onde ficará os dados do volume docker no AWS EFS e base da dados da aplicação no AWS RDS.</p>
+
+        </section>
+
+        
+
+        <footer class="post-footer">
+            <!-- If we want to display author's name and bio -->
+            
+                <figure class="author-image">
+                    <a class="img" href="/" style="background-image: url(/assets/images/profile.png)">
+                    <span class="hidden">kessix's Picture</span></a>
+                </figure>
+                <section class="author">
+                    <!-- Author Name -->
+                    <h4> kessix </h4>
+                    <!-- Author Bio -->
+                    <p>
+                        IT Infrastructure Analyst at SEAS | Cloud | DevOps | Linux | LPIC1
+                    </p>
+                </section>
+            
+
+            <!-- Share links section -->
+            <section class="share">
+    <h4>Share this post</h4>
+    <a class="icon-twitter" href="http://twitter.com/share?text=Deployando Aplicação Web com Docker Swarm na AWS&amp;url=https://kessix.github.io/2022/04/19/deploy-app-dockerswarm-aws.html"
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+        <span class="hidden">Twitter</span>
+    </a>
+    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://kessix.github.io/2022/04/19/deploy-app-dockerswarm-aws.html"
+        onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+        <span class="hidden">Facebook</span>
+    </a>
+    <a class="icon-google-plus" href="https://plus.google.com/share?url=https://kessix.github.io/2022/04/19/deploy-app-dockerswarm-aws.html"
+       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+        <span class="hidden">Google+</span>
+    </a>
+</section>
+
+            <!-- Disqus comments -->
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+    <footer class="site-footer clearfix">
+      <section class="copyright">
+        <a href="">@kessix_</a> &copy; 
+              2022 &bull; All rights reserved.
+      </section>
+      <section class="poweredby">Made with Jekyll using 
+        <a href="http://github.com/rosario/kasper">Kasper theme</a>
+      </section>
+    </footer>
+    
+    <script type="text/javascript" src="/assets/js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+    <!-- Google Analytics Tracking code -->
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-XXXXXXXX-X']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>   
+</body>
+</html>
