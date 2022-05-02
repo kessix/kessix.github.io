@@ -54,14 +54,17 @@
         <!-- <h1 class="post-title">Deployando uma Aplicação Web com Docker Swarm na AWS</h1> -->
 
         <section class="post-content">
-            <p>Vou demonstrar como fazer o deploy de uma aplicação web Wordpress em um cluster de Docker Swarm na AWS.
-Para alcançar esse nível de arquitetura, usarei as seguintes tecnologias:</p>
+            <p>Vou demonstrar como fazer o deploy de uma aplicação web Wordpress em um cluster de Docker Swarm na AWS.</p>
+
+<p>Estou assumindo que quem tiver interesse em implementar esse projeto já possui conhecimento em Docker, Linux e serviços da Amazon Web Services (AWS).</p>
+
+<p>Para alcançar esse nível de arquitetura, usarei as seguintes tecnologias:</p>
 
 <ul>
   <li>Docker (modo Swarm)</li>
 </ul>
 
-<p>As versões atuais do Docker incluem o modo swarm para gerenciar nativamente um cluster de Docker Engines chamado “swarm”. Apenas com a CLI do Docker é possível criar um swarm e implantar serviços (containers) em vários hosts docker que trabalham em cluster. Dessa forma, iremos usar cluster swarm para manter os containers da aplicação em alta disponibilidade, assim garantindo tolerência a falhas até mesmo se um dos hosts vier a cair.</p>
+<p>As versões atuais do Docker incluem o modo swarm para gerenciar nativamente um cluster de Docker Engines chamado “swarm”. Apenas com a CLI do Docker é possível criar um swarm e implantar serviços (containers) em vários hosts docker que trabalham em cluster. Dessa forma, iremos usar cluster swarm para manter os containers da aplicação em alta disponibilidade, assim garantindo tolerência a falhas, até mesmo se um dos hosts vier a cair.</p>
 
 <ul>
   <li>Amazon Elastic Compute Cloud (EC2)</li>
@@ -79,13 +82,13 @@ Para alcançar esse nível de arquitetura, usarei as seguintes tecnologias:</p>
   <li>Amazon Relational Database Service (RDS)</li>
 </ul>
 
-<p>O RDS é uma coleção de serviços gerenciados que facilita a configuração, operação e escalabilidade de bancos de dados na nuvem.Então disponível várias engines para uso no RDS, desde Amazon Aurora, MySQL, MariaDB, PostgreSQL, Oracle e SQL Server. Neste lab usarei a engine do MySQL 8.0.11, ao qual o Wordpress se conectará para uso da base da dados.</p>
+<p>O RDS é uma coleção de serviços gerenciados que facilita a configuração, operação e escalabilidade de bancos de dados na nuvem. Estão disponíveis várias engines para uso no RDS, desde Amazon Aurora, MySQL, MariaDB, PostgreSQL, Oracle e SQL Server. Neste lab usarei a engine do MySQL 8.0.11, ao qual o Wordpress se conectará para uso da base da dados.</p>
 
 <ul>
   <li>Traefik</li>
 </ul>
 
-<p>O Traefik é um Edge Router, pode utuar como uma espécie de proxy, que torna a publicação de serviços uma experiência fácil. Ele recebe solicitações em nome do seu sistema e descobre quais componentes são responsáveis por tratá-las. O Traefik também é nativo para uso com Docker, e estará presente em cada um dos nós do Swarm. Dessa forma será possível servir nossa aplicação indenpende de qual nó do Swarm executa o serviço.</p>
+<p>O Traefik é um proxy Edge Router, que torna a publicação de serviços uma experiência fácil. Ele recebe solicitações em nome do seu sistema e descobre quais componentes são responsáveis por tratá-las. O Traefik também é nativo para uso com Docker, e estará presente em cada um dos nós do Swarm. Dessa forma será possível servir nossa aplicação independente de qual nó do Swarm execute o serviço.</p>
 
 <ul>
   <li>Wordpress</li>
@@ -117,7 +120,7 @@ utilizei o Ubuntu 20.04.3 LTS.</p>
 </ul>
 
 <p>As três instâncias estão na mesma VPC (Virtual Private Cloud) sob o CIDR 172.31.0.0/16.
-Além disso, atrelado a VPC onde estão os hosts EC2, criei um Security Group para realizar as devidas liberações das portas dos serviços e protocolos.</p>
+Além disso, atrelado à VPC onde estão os hosts EC2, criei um Security Group para realizar as devidas liberações das portas dos serviços e protocolos.</p>
 
 <h5 id="configuração-do-docker-engine">Configuração do Docker Engine</h5>
 
@@ -142,19 +145,19 @@ Além disso, atrelado a VPC onde estão os hosts EC2, criei um Security Group pa
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-fsSL</span> https://download.docker.com/linux/ubuntu/gpg | <span class="nb">sudo </span>gpg <span class="nt">--dearmor</span> <span class="nt">-o</span> /usr/share/keyrings/docker-archive-keyring.gpg
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">3. Use o comando a seguir para configurar o repositório estável. Para adicionar o repositório nightly ou test, adicione a palavra nightly ou test (ou ambos) após a palavra stable nos comandos abaixo.</code></p>
+<p><code class="highlighter-rouge">3. Use o comando a seguir para configurar o repositório estável. Para adicionar o repositório nightly ou test, adicione a palavra nightly ou test (ou ambos) após a palavra stable nos comandos abaixo:</code></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span> <span class="nb">echo</span> <span class="s2">"deb [arch=</span><span class="si">$(</span>dpkg <span class="nt">--print-architecture</span><span class="si">)</span><span class="s2"> signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu </span><span class="se">\</span><span class="s2">
   </span><span class="si">$(</span>lsb_release <span class="nt">-cs</span><span class="si">)</span><span class="s2"> stable"</span> | <span class="nb">sudo tee</span> /etc/apt/sources.list.d/docker.list <span class="o">&gt;</span> /dev/null
 </code></pre></div></div>
-<p><code class="highlighter-rouge">4. Instalando o docker.</code></p>
+<p><code class="highlighter-rouge">4. Instalando o docker:</code></p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt-get update
 </code></pre></div></div>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt-get <span class="nb">install </span>docker-ce docker-ce-cli containerd.io
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">5. Verifique a versão do docker instalada.</code></p>
+<p><code class="highlighter-rouge">5. Verifique a versão do docker instalada:</code></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker <span class="nt">--version</span>
 </code></pre></div></div>
@@ -165,11 +168,11 @@ Além disso, atrelado a VPC onde estão os hosts EC2, criei um Security Group pa
 
 <p>No Swarm cada host pode assumir a função de worker, a entidade que executa as cargas de trabalho gerais ou manager, a entidade que gerencia o cluster swarm e executa cargas de trabalho relacionadas a gerência do mesmo.</p>
 
-<p>No nosso cenário, temos apenas 3 nós EC2 e dessa forma todos terão função de manager. Existem uma série de boas práticas a serem seguidas na criação de um cluster swarm, mas não irei abordar nesse artigo.</p>
+<p>No nosso cenário, temos apenas 3 nós EC2 e dessa forma todos terão função de manager. Existem uma série de boas práticas a serem seguidas na criação de um cluster swarm, mas não irei abordar nesse artigo. Para se aprofundar nesses conceitos consulte a <a href="https://docs.docker.com/engine/swarm/">documentação oficial</a>.</p>
 
 <p>Os próximos passos devem ser aplicados no node01:</p>
 
-<p><code class="highlighter-rouge">1. Ativando modo swarm no host.</code></p>
+<p><code class="highlighter-rouge">1. Ativando modo swarm no host:</code></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker swarm init <span class="nt">--advertise-addr</span> 172.31.88.147 <span class="c"># IP node01</span>
 </code></pre></div></div>
@@ -184,7 +187,7 @@ Para que haja comunicação entre os nós do swarm libere as seguintes portas no
   <li><code class="highlighter-rouge">4789/udp</code></li>
 </ul>
 
-<p><code class="highlighter-rouge">2. Obtendo token para adicionar o node02 e node03 como nós do tipo manager.</code></p>
+<p><code class="highlighter-rouge">2. Obtendo token para adicionar o node02 e node03 como nós do tipo manager:</code></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker swarm join-token manager
 </code></pre></div></div>
@@ -203,13 +206,15 @@ qjp3jwr2    ip-172-31-29-135   Ready     Active         Reachable
 lb8wsbvq <span class="k">*</span>  ip-172-31-88-147   Ready     Active         Leader           
 </code></pre></div></div>
 
-<p>Perceba que um dos hosts está com uma marcação <code class="highlighter-rouge">*</code>, isso além do próprio status, indica que esse nó é o líder do swarm. No momento que houve uma falha, o swarm automaticamente irá eleger um dos dois outros nós como líder.</p>
+<p>Perceba que um dos hosts está com uma marcação <code class="highlighter-rouge">*</code>, isso além do próprio status, indica que esse nó é o líder do swarm. No momento em que houver uma falha com um líder atual do cluster, o swarm automaticamente irá eleger um novo líder.</p>
 
-<p>Nosso cluster já está pronto! Agora temos que configurar a partição onde ficará os dados do volume docker no AWS EFS e base da dados da aplicação no AWS RDS.</p>
+<p>Nosso cluster já está pronto! :D</p>
 
-<p><code class="highlighter-rouge">4. Crie uma rede docker com o drive overlay para a aplicação no Swarm</code></p>
+<p>Agora temos que configurar a partição onde ficará os dados do volume docker no AWS EFS e a base da dados da aplicação no AWS RDS.</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker network create <span class="nt">--driver</span> overlay webapp-network
+<p><code class="highlighter-rouge">4. Crie uma rede docker com o drive overlay, essa será a rede que a aplicação web utilizará:</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker network create <span class="nt">--driver</span> overlay webapp-network
 </code></pre></div></div>
 
 <h5 id="criando-o-elastic-file-system-efs">Criando o Elastic File System (EFS)</h5>
@@ -223,7 +228,7 @@ lb8wsbvq <span class="k">*</span>  ip-172-31-88-147   Ready     Active         L
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>apt <span class="nb">install </span>nfs-common
 </code></pre></div></div>
 
-<p>Primeiramente, crie nos três hosts do swarm um diretório com caminho <code class="highlighter-rouge">/mnt/app-data-vol/</code>. Copie o comando no painel do EFS para fazer o attach do sistema de arquivos nas instâncias EC2.</p>
+<p>Primeiramente, crie nos três hosts do swarm um diretório com caminho <code class="highlighter-rouge">/mnt/app-data-vol/</code>. Copie o comando no painel do EFS para fazer o <code class="highlighter-rouge">attach</code> do sistema de arquivos nas instâncias EC2.</p>
 
 <p>O comando será algo parecido com:</p>
 
@@ -281,7 +286,7 @@ hc2<span class="k">***</span>   webapplication_wordpress   replicated   1/1     
 
 <p>Note que no docker-compose, eu defini dois serviços: <code class="highlighter-rouge">traefik</code> e <code class="highlighter-rouge">wordpress</code>.</p>
 
-<p>O primeiro é o serviço do traefik, que será replicado de modo <code class="highlighter-rouge">global</code>, em outras palavras isso significa que cada nó do swarm terá um container do traefik, dessa forma faremos a descoberta do serviço em todas as EC2.</p>
+<p>O primeiro é o serviço do traefik, que será replicado em modo <code class="highlighter-rouge">global</code>, em outras palavras isso significa que cada nó do swarm terá um container do traefik, dessa forma faremos a descoberta do serviço em todas as EC2.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>services:
   traefik:

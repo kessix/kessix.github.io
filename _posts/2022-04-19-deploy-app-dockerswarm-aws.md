@@ -6,11 +6,14 @@ categories:
 ---
 
 Vou demonstrar como fazer o deploy de uma aplicação web Wordpress em um cluster de Docker Swarm na AWS.
+
+Estou assumindo que quem tiver interesse em implementar esse projeto já possui conhecimento em Docker, Linux e serviços da Amazon Web Services (AWS).
+
 Para alcançar esse nível de arquitetura, usarei as seguintes tecnologias:
 
 - Docker (modo Swarm) 
 
-As versões atuais do Docker incluem o modo swarm para gerenciar nativamente um cluster de Docker Engines chamado "swarm". Apenas com a CLI do Docker é possível criar um swarm e implantar serviços (containers) em vários hosts docker que trabalham em cluster. Dessa forma, iremos usar cluster swarm para manter os containers da aplicação em alta disponibilidade, assim garantindo tolerência a falhas até mesmo se um dos hosts vier a cair.
+As versões atuais do Docker incluem o modo swarm para gerenciar nativamente um cluster de Docker Engines chamado "swarm". Apenas com a CLI do Docker é possível criar um swarm e implantar serviços (containers) em vários hosts docker que trabalham em cluster. Dessa forma, iremos usar cluster swarm para manter os containers da aplicação em alta disponibilidade, assim garantindo tolerência a falhas, até mesmo se um dos hosts vier a cair.
 
 - Amazon Elastic Compute Cloud (EC2) 
 
@@ -22,11 +25,11 @@ O EFS é um sistema de arquivos elástico simples, sem servidor, compatível com
 
 - Amazon Relational Database Service (RDS)  
 
-O RDS é uma coleção de serviços gerenciados que facilita a configuração, operação e escalabilidade de bancos de dados na nuvem.Então disponível várias engines para uso no RDS, desde Amazon Aurora, MySQL, MariaDB, PostgreSQL, Oracle e SQL Server. Neste lab usarei a engine do MySQL 8.0.11, ao qual o Wordpress se conectará para uso da base da dados.
+O RDS é uma coleção de serviços gerenciados que facilita a configuração, operação e escalabilidade de bancos de dados na nuvem. Estão disponíveis várias engines para uso no RDS, desde Amazon Aurora, MySQL, MariaDB, PostgreSQL, Oracle e SQL Server. Neste lab usarei a engine do MySQL 8.0.11, ao qual o Wordpress se conectará para uso da base da dados.
 
 - Traefik 
 
-O Traefik é um Edge Router, pode utuar como uma espécie de proxy, que torna a publicação de serviços uma experiência fácil. Ele recebe solicitações em nome do seu sistema e descobre quais componentes são responsáveis por tratá-las. O Traefik também é nativo para uso com Docker, e estará presente em cada um dos nós do Swarm. Dessa forma será possível servir nossa aplicação indenpende de qual nó do Swarm executa o serviço. 
+O Traefik é um proxy Edge Router, que torna a publicação de serviços uma experiência fácil. Ele recebe solicitações em nome do seu sistema e descobre quais componentes são responsáveis por tratá-las. O Traefik também é nativo para uso com Docker, e estará presente em cada um dos nós do Swarm. Dessa forma será possível servir nossa aplicação independente de qual nó do Swarm execute o serviço. 
 
 - Wordpress 
 
@@ -53,7 +56,7 @@ Private IPv4
 - node03 - 172.31.26.68
 
 As três instâncias estão na mesma VPC (Virtual Private Cloud) sob o CIDR 172.31.0.0/16.
-Além disso, atrelado a VPC onde estão os hosts EC2, criei um Security Group para realizar as devidas liberações das portas dos serviços e protocolos.
+Além disso, atrelado à VPC onde estão os hosts EC2, criei um Security Group para realizar as devidas liberações das portas dos serviços e protocolos.
 
 
 ##### Configuração do Docker Engine
@@ -82,13 +85,13 @@ $ sudo apt-get install \
 $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 ```
 
-`3. Use o comando a seguir para configurar o repositório estável. Para adicionar o repositório nightly ou test, adicione a palavra nightly ou test (ou ambos) após a palavra stable nos comandos abaixo.`
+`3. Use o comando a seguir para configurar o repositório estável. Para adicionar o repositório nightly ou test, adicione a palavra nightly ou test (ou ambos) após a palavra stable nos comandos abaixo:`
 
 ```bash
 $  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
-`4. Instalando o docker.`
+`4. Instalando o docker:`
 ```bash
 $ sudo apt-get update
 ```
@@ -97,7 +100,7 @@ $ sudo apt-get update
 $ sudo apt-get install docker-ce docker-ce-cli containerd.io
 ```
 
-`5. Verifique a versão do docker instalada.`
+`5. Verifique a versão do docker instalada:`
 
 ```bash
 $ docker --version
@@ -111,11 +114,13 @@ Realize a mesma configuração nas demais instâncias EC2.
 
 No Swarm cada host pode assumir a função de worker, a entidade que executa as cargas de trabalho gerais ou manager, a entidade que gerencia o cluster swarm e executa cargas de trabalho relacionadas a gerência do mesmo. 
 
-No nosso cenário, temos apenas 3 nós EC2 e dessa forma todos terão função de manager. Existem uma série de boas práticas a serem seguidas na criação de um cluster swarm, mas não irei abordar nesse artigo.
+No nosso cenário, temos apenas 3 nós EC2 e dessa forma todos terão função de manager. Existem uma série de boas práticas a serem seguidas na criação de um cluster swarm, mas não irei abordar nesse artigo. Para se aprofundar nesses conceitos consulte a [documentação oficial][doc_swarm].
+
+[doc_swarm]: https://docs.docker.com/engine/swarm/
 
 Os próximos passos devem ser aplicados no node01:
 
-`1. Ativando modo swarm no host.`
+`1. Ativando modo swarm no host:`
 
 ```bash
 $ docker swarm init --advertise-addr 172.31.88.147 # IP node01
@@ -129,7 +134,7 @@ Para que haja comunicação entre os nós do swarm libere as seguintes portas no
 - `7946/udp`
 - `4789/udp`
 
-`2. Obtendo token para adicionar o node02 e node03 como nós do tipo manager.`
+`2. Obtendo token para adicionar o node02 e node03 como nós do tipo manager:`
 
 ```bash
 $ docker swarm join-token manager
@@ -151,14 +156,16 @@ qjp3jwr2    ip-172-31-29-135   Ready     Active         Reachable
 lb8wsbvq *  ip-172-31-88-147   Ready     Active         Leader           
 ```
 
-Perceba que um dos hosts está com uma marcação `*`, isso além do próprio status, indica que esse nó é o líder do swarm. No momento que houve uma falha, o swarm automaticamente irá eleger um dos dois outros nós como líder.
+Perceba que um dos hosts está com uma marcação `*`, isso além do próprio status, indica que esse nó é o líder do swarm. No momento em que houver uma falha com um líder atual do cluster, o swarm automaticamente irá eleger um novo líder.
 
-Nosso cluster já está pronto! Agora temos que configurar a partição onde ficará os dados do volume docker no AWS EFS e base da dados da aplicação no AWS RDS.
+Nosso cluster já está pronto! :D
 
-`4. Crie uma rede docker com o drive overlay para a aplicação no Swarm`
+Agora temos que configurar a partição onde ficará os dados do volume docker no AWS EFS e a base da dados da aplicação no AWS RDS.
+
+`4. Crie uma rede docker com o drive overlay, essa será a rede que a aplicação web utilizará:`
 
 ```bash
-docker network create --driver overlay webapp-network
+$ docker network create --driver overlay webapp-network
 ```
 
 ##### Criando o Elastic File System (EFS)
@@ -173,7 +180,7 @@ Antes de conectar no EFS, instale o pacote cliente do NFS nos hosts, dessa forma
 $ apt install nfs-common
 ```
 
-Primeiramente, crie nos três hosts do swarm um diretório com caminho `/mnt/app-data-vol/`. Copie o comando no painel do EFS para fazer o attach do sistema de arquivos nas instâncias EC2.
+Primeiramente, crie nos três hosts do swarm um diretório com caminho `/mnt/app-data-vol/`. Copie o comando no painel do EFS para fazer o `attach` do sistema de arquivos nas instâncias EC2.
 
 O comando será algo parecido com:
 
@@ -243,7 +250,7 @@ Para melhor visualização do arquivo `docker-compose.yaml`, adicionei-o no meu 
 
 Note que no docker-compose, eu defini dois serviços: `traefik` e `wordpress`. 
 
-O primeiro é o serviço do traefik, que será replicado de modo `global`, em outras palavras isso significa que cada nó do swarm terá um container do traefik, dessa forma faremos a descoberta do serviço em todas as EC2.
+O primeiro é o serviço do traefik, que será replicado em modo `global`, em outras palavras isso significa que cada nó do swarm terá um container do traefik, dessa forma faremos a descoberta do serviço em todas as EC2.
 
 ```bash
 services:
