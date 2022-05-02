@@ -54,28 +54,48 @@
         <!-- <h1 class="post-title">Deployando uma Aplicação Web com Docker Swarm na AWS</h1> -->
 
         <section class="post-content">
-            <h4 id="escopo">Escopo</h4>
+            <p>Vou demonstrar como fazer o deploy de uma aplicação web Wordpress em um cluster de Docker Swarm na AWS.
+Para alcançar esse nível de arquitetura, usarei as seguintes tecnologias:</p>
 
-<p>Vou demonstrar como fazer o deploy de uma aplicação web em cluster de Docker Swarm na AWS.
-Para alcançar esse objetivo, usarei as seguintes tecnologias:</p>
-
-<p>Docker (modo Swarm)</p>
+<ul>
+  <li>Docker (modo Swarm)</li>
+</ul>
 
 <p>As versões atuais do Docker incluem o modo swarm para gerenciar nativamente um cluster de Docker Engines chamado “swarm”. Apenas com a CLI do Docker é possível criar um swarm e implantar serviços (containers) em vários hosts docker que trabalham em cluster. Dessa forma, iremos usar cluster swarm para manter os containers da aplicação em alta disponibilidade, assim garantindo tolerência a falhas até mesmo se um dos hosts vier a cair.</p>
 
-<p>Amazon Elastic Compute Cloud (EC2)</p>
+<ul>
+  <li>Amazon Elastic Compute Cloud (EC2)</li>
+</ul>
 
-<p>Amazon Elastic File System (EFS)</p>
+<p>O EC2 é um serviço web que disponibiliza capacidade computacional segura e redimensionável na nuvem. Em nosso sistema, teremos 3 instâncias EC2 e cada uma será um nó do cluster Swarm.</p>
 
-<p>Amazon Relational Database Service (RDS)</p>
+<ul>
+  <li>Amazon Elastic File System (EFS)</li>
+</ul>
 
-<p>Traefik</p>
+<p>O EFS é um sistema de arquivos elástico simples, sem servidor, compatível com o protocolo Network File System versão 4 (NFSv4.1 e NFSv4.0). Várias instâncias, incluindo Amazon EC2, Amazon ECS e AWS Lambda, podem acessar um sistema de arquivos do Amazon EFS ao mesmo tempo. Usaremos o EFS para armazenar os dados do nosso volume Docker.</p>
 
-<h5 id="arquitetura">Arquitetura</h5>
+<ul>
+  <li>Amazon Relational Database Service (RDS)</li>
+</ul>
 
-<p>imagem</p>
+<p>O RDS é uma coleção de serviços gerenciados que facilita a configuração, operação e escalabilidade de bancos de dados na nuvem.Então disponível várias engines para uso no RDS, desde Amazon Aurora, MySQL, MariaDB, PostgreSQL, Oracle e SQL Server. Neste lab usarei a engine do MySQL 8.0.11, ao qual o Wordpress se conectará para uso da base da dados.</p>
 
-<h4 id="hora-de-deployar">Hora de Deployar!</h4>
+<ul>
+  <li>Traefik</li>
+</ul>
+
+<p>O Traefik é um Edge Router, pode utuar como uma espécie de proxy, que torna a publicação de serviços uma experiência fácil. Ele recebe solicitações em nome do seu sistema e descobre quais componentes são responsáveis por tratá-las. O Traefik também é nativo para uso com Docker, e estará presente em cada um dos nós do Swarm. Dessa forma será possível servir nossa aplicação indenpende de qual nó do Swarm executa o serviço.</p>
+
+<ul>
+  <li>Wordpress</li>
+</ul>
+
+<p>WordPress é uma ferramenta open source de web sites e blogs e um Sistema de Gerenciamento de Conteúdo (CMS). Neste lab o WordPress será usado para exemplificar o funcionamento de uma aplicação web real.</p>
+
+<h5 id="arquitetura-da-aplicação-web">Arquitetura da Aplicação Web</h5>
+
+<p><img src="/assets/images/architecture.png" alt="My helpful screenshot" /></p>
 
 <h5 id="configuração-das-instâncias-aws-ec2">Configuração das instâncias AWS EC2</h5>
 
@@ -187,6 +207,11 @@ lb8wsbvq <span class="k">*</span>  ip-172-31-88-147   Ready     Active         L
 
 <p>Nosso cluster já está pronto! Agora temos que configurar a partição onde ficará os dados do volume docker no AWS EFS e base da dados da aplicação no AWS RDS.</p>
 
+<p><code class="highlighter-rouge">4. Crie uma rede docker com o drive overlay para a aplicação no Swarm</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker network create <span class="nt">--driver</span> overlay webapp-network
+</code></pre></div></div>
+
 <h5 id="criando-o-elastic-file-system-efs">Criando o Elastic File System (EFS)</h5>
 
 <p>No menu stogare, no painel da AWS, crie um novo Elastic File System. Lembre de atribuir ao EFS a mesma VPC e Security Group onde foram criadas as instâncias do EC2 se conectem no sistema de arquivos.</p>
@@ -215,6 +240,126 @@ lb8wsbvq <span class="k">*</span>  ip-172-31-88-147   Ready     Active         L
 </code></pre></div></div>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>172.31.19.25:/ /mnt/app-data-vol   nfs4    <span class="nv">nfsvers</span><span class="o">=</span>4.1,rsize<span class="o">=</span>1048576,wsize<span class="o">=</span>1048576,hard,timeo<span class="o">=</span>600,retrans<span class="o">=</span>2,noresvport     0 0
 </code></pre></div></div>
+
+<h5 id="configuração-do-banco-de-dados-rds">Configuração do Banco de Dados (RDS)</h5>
+
+<p>Crie uma base de dados no menu do RDS. Nesse lab será utilizado a engine do MySQL. Seguirei a seguinte configuração:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Endpoint: wordpressdb.example.rds.amazonaws.com
+Engine: MySQL 8.0.11
+Port: 3306
+Database: wordpress
+User: admin
+Password: <span class="k">*****************************</span>
+</code></pre></div></div>
+
+<h5 id="deployando-a-aplicação-na-aws">Deployando a Aplicação na AWS</h5>
+
+<p>As imagens oficiais do Traefik e WordPress estão disponíveis no Docker Hub.</p>
+
+<p>O deploy será feito com base no arquivo de Docker Compose, o arquivo será passado como argumento do comando de inicialização da stack do Docker Swarm, conforme o exemplo:</p>
+
+<p>Obs.: Como boa prática, execute o comando de deploy no host EC2 que é o líder do cluster swarm.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker stack deploy <span class="nt">-c</span> docker-compose.yaml webapplication 
+<span class="c"># Sintaxe: docker stack deploy [-c arquivo-compose] [nome-da-stack]</span>
+</code></pre></div></div>
+
+<p>Para visualizar o status dos serviços no Swarm use o comando:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker service <span class="nb">ls</span>
+</code></pre></div></div>
+
+<p>A saída deve ser algo parecido com:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ID       NAME                       MODE         REPLICAS   IMAGE              PORTS
+rn4<span class="k">***</span>   webapplication_traefik     global       3/3        traefik:v2.2.1     <span class="k">*</span>:80-&gt;80/tcp, <span class="k">*</span>:843-&gt;443/tcp
+hc2<span class="k">***</span>   webapplication_wordpress   replicated   1/1        wordpress:latest]
+</code></pre></div></div>
+
+<p>Para melhor visualização do arquivo <code class="highlighter-rouge">docker-compose.yaml</code>, adicionei-o no meu <a href="https://github.com/kessix">GitHub</a> no repositório <a href="https://github.com/kessix/webapp-dockerswarm-aws/blob/main/docker-compose-wordpress-swarm.yaml">webapp-dockerswarm-aws</a>, confere lá!</p>
+
+<p>Note que no docker-compose, eu defini dois serviços: <code class="highlighter-rouge">traefik</code> e <code class="highlighter-rouge">wordpress</code>.</p>
+
+<p>O primeiro é o serviço do traefik, que será replicado de modo <code class="highlighter-rouge">global</code>, em outras palavras isso significa que cada nó do swarm terá um container do traefik, dessa forma faremos a descoberta do serviço em todas as EC2.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>services:
+  traefik:
+    image: traefik:v2.2.1
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+      placement:
+        constraints:
+          - node.role <span class="o">==</span> manager
+      labels:
+        - <span class="s2">"traefik.enable=true"</span>
+        - <span class="s2">"traefik.http.routers.traefik.rule=Host(</span><span class="sb">`</span>traefik.godric.local<span class="sb">`</span><span class="s2">)"</span>
+        - <span class="s2">"traefik.http.services.justAdummyService.loadbalancer.server.port=1337"</span>
+        - <span class="s2">"traefik.http.routers.traefik.service=api@internal"</span>
+    ports:
+      - <span class="s2">"80:80"</span>
+      - <span class="s2">"843:443"</span>
+    networks:
+      - <span class="s2">"webapp-network"</span>
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    <span class="nb">command</span>:
+      - <span class="s2">"--api=true"</span>
+      - <span class="s2">"--log.level=DEBUG"</span>
+      - <span class="s2">"--providers.docker.endpoint=unix:///var/run/docker.sock"</span>
+      - <span class="s2">"--providers.docker.swarmMode=true"</span>
+      - <span class="s2">"--providers.file.directory=/etc/traefik/dynamic"</span>
+      - <span class="s2">"--providers.docker.exposedbydefault=false"</span>
+      - <span class="s2">"--entrypoints.web.address=:80"</span>
+</code></pre></div></div>
+
+<p>Observe que não fizemos exposição de portas para o serviço do WordPress, isso graças ao <code class="highlighter-rouge">labels</code> que define a URL que será resolvida pela nosso proxy Traefik!</p>
+
+<p>O segundo serviço definido no arquivo compose, faz o deploy a aplicação web WordPress, note que a âncora <code class="highlighter-rouge">template-deploy</code> fará com que o serviço do WordPress tenha apenas uma réplica, isso faz total sentido, uma que vez que será necessário apenas um container da aplicação em execução por vez em cada host EC2. Logo, se ocorrer uma falha no container atual, o swarm subirá um novo container no “melhor” host do cluster.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>services:
+ <span class="o">[</span>...]
+  wordpress:
+    image: wordpress
+    environment:
+      WORDPRESS_DB_HOST: wordpressdb.example.us-east-1.rds.amazonaws.com
+      WORDPRESS_DB_USER: admin
+      WORDPRESS_DB_PASSWORD: <span class="k">***********************</span>
+      WORDPRESS_DB_NAME: wordpress
+    networks:
+      - <span class="s2">"webapp-network"</span>
+    volumes:
+      - /mnt/app-data-vol:/var/www/html
+    deploy: 
+      &lt;&lt;: <span class="k">*</span>template-deploy
+      labels:
+        - <span class="s2">"traefik.enable=true"</span>
+        - <span class="s2">"traefik.http.routers.wordpress.entrypoints=web"</span>
+        - <span class="s2">"traefik.http.routers.wordpress.rule=Host(</span><span class="sb">`</span>wordpress.godric.local<span class="sb">`</span><span class="s2">)"</span>
+        - <span class="s2">"traefik.http.services.wordpress.loadbalancer.server.port=80"</span>
+</code></pre></div></div>
+
+<p>O serviço do WordPress, possui um volume do tipo <code class="highlighter-rouge">bind mount</code> apontando para nossa área do AWS EFS, logo os arquivos da nossa aplicação web serão armazenados em um volume no EFS.</p>
+
+<p>Por fim, definidas as variáveis de ambiente no arquivo compose, conectamos a aplicação Web na base de dados criada no AWS RDS, o campo mais importante é endpoint que deve ser exatamente igual ao criado na instância RDS. Caso a VPC das instâncias EC2 seja diferente da VPC onde está a instância RDS, será necessário realizar as devidas liberações na configuração da instância RDS para que seja possível conectar na base de dados.</p>
+
+<p>Para testar o funcionamento da aplicação adicione as hostnames configurados no <code class="highlighter-rouge">label</code> do Traefik em sua zona de DNS. Neste lab não abordarei a configuração da entradas DNS e nem o serviço da AWS Route53. Como dica, para testar o acesso à aplicação web de forma simples, adicione as entredas em seu arquivo hosts que está presente em máquinas com sistemas Linux ou Windows. No meu Linux, ficaria algo parecido com:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># wordpress-in-swarm</span>
+<span class="o">[</span>ip-public-EC2] traefik.godric.local
+<span class="o">[</span>ip-public-EC2] wordpress.godric.local
+</code></pre></div></div>
+
+<p>Com todos esses passos alcançamos o objetivo e agora temos uma sistema web em alta disponibilidade na AWS, desde a  aplicaçao Web com arquivos no AWS EFS, até a base de dados gerencida no AWS RDS.</p>
+
+<p>Infelizmente não é possível abordar todos os detalhes relacionados a configuração do ambiente, devido o nível de detalhes que seria necessário para tal. Dessa forma, me coloco a disposição para exclarecer dúvidas refentes ao ambiente aqui provisionado.</p>
+
+<p>Até a próxima! :D</p>
 
 
         </section>
