@@ -1,0 +1,13 @@
+/* Portfolio additions on top of Steller */
+.project-card, .service-card { height: 100%; text-align: left; }
+.project-card .card-body, .service-card .card-body { display: flex; flex-direction: column; padding: 2rem; }
+.project-card .status { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; opacity: .7; }
+.project-card h5, .service-card h5 { margin: .5rem 0 .75rem; }
+.project-card p, .service-card p { opacity: .85; }
+.project-card .tags { margin-top: auto; padding-top: 1rem; }
+.tag { display: inline-block; margin: 0 .35rem .35rem 0; padding: .15rem .6rem; border: 1px solid rgba(0,0,0,.15); border-radius: 50rem; font-size: .75rem; }
+.project-card .link { margin-top: 1rem; font-weight: 600; }
+.service-card i { font-size: 1.75rem; margin-bottom: .5rem; }
+.cert-list { list-style: none; padding: 0; margin: 0; }
+.cert-list li { padding: .2rem 0; }
+.stack-list .tag { font-size: .85rem; padding: .3rem .8rem; }

@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Web Professional Site">
+    <meta name="description" content="Kessi Diones — SRE, DevOps e desenvolvimento de SaaS. Projetos próprios e consultoria em cloud, Kubernetes e infraestrutura.">
     <meta name="author" content="kessix">
-    <title>Resume - Kessi Diones</title>
+    <title>Kessi Diones — SaaS, Sistemas e Consultoria</title>
     <!-- font icons -->
     <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
     <!-- Bootstrap + Steller main styles -->
 	<link rel="stylesheet" href="assets/css/steller.css">
+	<link rel="stylesheet" href="assets/css/portfolio.css">
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 
@@ -24,15 +25,12 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto align-items-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#about">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#service">Skills</a>
-                    </li>                    
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://kessix.medium.com/" target="_blank">Blog</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#about">Sobre</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#projects">Projetos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#consulting">Consultoria</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#service">Stack</a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://kessix.medium.com/" target="_blank" rel="noopener">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contato</a></li>
                 </ul>
             </div>
         </div>          
@@ -43,11 +41,13 @@
     <header class="header" id="home">
         <div class="container">
             <div class="infos">
-                <h6 class="subtitle">hello,I'm</h6>
+                <h6 class="subtitle">olá, eu sou</h6>
                 <h6 class="title">Kessi Diones</h6>
-                <p>SRE / Software Engineer</p>
+                <p>SRE &amp; DevOps · Desenvolvedor de SaaS e sistemas</p>
 
                 <div class="buttons pt-3">
+                    <a class="btn btn-primary rounded" href="#projects">VER PROJETOS</a>
+                    <a class="btn btn-dark rounded" href="#contact">FALAR SOBRE CONSULTORIA</a>
                     <!-- <button class="btn btn-primary rounded">HIRE ME</button> -->
                     <!-- <button class="btn btn-dark rounded">DOWNLOAD CV</button> -->
                 </div>      
@@ -90,15 +90,98 @@
                 </div>
                 <div class="pl-md-4 col-md-9">
                     <h6 class="title">Kessi Diones</h6>
-                    <p class="subtitle">SRE / Software Engineer</p>
-                    <p>Focused on solving problems with Cloud Native technologies, I have considerable experience in multi-cloud environments with a strong focus on AWS.</p>
-                    <!-- <button class="btn btn-primary rounded mt-3">DOWNLOAD CV</button>                    -->
-                    <p class="subtitle">Certifications</p>
-                    <p>CKA: Certified Kubernetes Administrator</p>
-                    <p>AWS Certified Cloud Practitioner</p>
-                    <p>GitLab Certified Associate</p>
-                    <p>Harness Certified Continuous Delivery & GitOps Developer</p>     
-                    <p>LPIC1 - Linux Professional Institute Certification</p>               
+                    <p class="subtitle">SRE &amp; DevOps · Desenvolvedor de infraestrutura e SaaS</p>
+                    <p>Resolvo problemas com tecnologias Cloud Native, com experiência em ambientes multi-cloud e foco em AWS. Além da carreira em SRE e DevOps, construo meus próprios produtos SaaS e sistemas, do banco de dados ao aplicativo, e levo essa mesma visão de confiabilidade e automação para projetos de clientes.</p>
+                    <p class="subtitle">Certificações</p>
+                    <ul class="cert-list">
+                        <li>CKA: Certified Kubernetes Administrator</li>
+                        <li>AWS Certified Cloud Practitioner</li>
+                        <li>GitLab Certified Associate</li>
+                        <li>Harness Certified Continuous Delivery &amp; GitOps Developer</li>
+                        <li>LPIC-1: Linux Professional Institute Certification</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Projects section -->
+    <section id="projects" class="section">
+        <div class="container">
+            <div class="text-center">
+                <h6 class="section-title mb-4">PROJETOS</h6>
+                <p class="mb-5">Produtos SaaS e sistemas que projeto e construo.</p>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="project-card card border">
+                        <div class="card-body">
+                            <span class="status">SaaS · Em desenvolvimento</span>
+                            <h5>ProBarber</h5>
+                            <p>Plataforma de gestão para barbearias. O barbeiro se cadastra pelo aplicativo (Android e iOS), gerencia agenda, serviços e pendências, e o cliente agenda por um link público da barbearia, com pagamento via Pix. Cada barbearia escolhe entre agendamento comum, pagamento obrigatório ou pagamento opcional.</p>
+                            <div class="tags">
+                                <span class="tag">Expo / React Native</span>
+                                <span class="tag">Next.js</span>
+                                <span class="tag">TypeScript</span>
+                                <span class="tag">Supabase / PostgreSQL</span>
+                                <span class="tag">Pix</span>
+                            </div>
+                            <a class="link" href="https://probarberapp.com.br" target="_blank" rel="noopener">probarberapp.com.br &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="project-card card border">
+                        <div class="card-body">
+                            <span class="status">Sistema · Em planejamento</span>
+                            <h5>CARF ID</h5>
+                            <p>Controle de acesso por reconhecimento facial para escolas, integrado a catracas. Notifica os responsáveis na entrada e na saída dos alunos, aplica regras por etapa de ensino e bloqueios por inadimplência, com multi-tenant, auditoria imutável, modo offline e conformidade com a LGPD.</p>
+                            <div class="tags">
+                                <span class="tag">NestJS</span>
+                                <span class="tag">Next.js</span>
+                                <span class="tag">PostgreSQL + RLS</span>
+                                <span class="tag">Gateway offline</span>
+                                <span class="tag">LGPD</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Consulting section -->
+    <section id="consulting" class="section">
+        <div class="container">
+            <div class="text-center">
+                <h6 class="section-title mb-4">CONSULTORIA</h6>
+                <p class="mb-5">Ajudo times e empresas a colocar sistemas em produção com segurança e a mantê-los de pé.</p>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="service-card card border"><div class="card-body">
+                        <i class="ti-cloud"></i><h5>Cloud &amp; AWS</h5>
+                        <p>Arquitetura, migração, redução de custos e ambientes multi-cloud.</p>
+                    </div></div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="service-card card border"><div class="card-body">
+                        <i class="ti-layers"></i><h5>Kubernetes &amp; Containers</h5>
+                        <p>Clusters, deploys, observabilidade e operação de aplicações em contêineres.</p>
+                    </div></div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="service-card card border"><div class="card-body">
+                        <i class="ti-reload"></i><h5>CI/CD &amp; Automação</h5>
+                        <p>Pipelines, GitOps e infraestrutura como código com Terraform e Ansible.</p>
+                    </div></div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="service-card card border"><div class="card-body">
+                        <i class="ti-mobile"></i><h5>Desenvolvimento de SaaS</h5>
+                        <p>Do desenho do produto ao app e à web, com backend, banco de dados e pagamentos.</p>
+                    </div></div>
                 </div>
             </div>
         </div>
@@ -108,7 +191,7 @@
     <section id="service" class="section">
         <div class="container text-center">
             <h6 class="subtitle"></h6>
-            <h6 class="section-title mb-4">SKILLS</h6>
+            <h6 class="section-title mb-4">STACK</h6>
             <p class="mb-5 pb-4"></p>
 
             <div class="row">
@@ -177,16 +260,33 @@
                     </div>
                 </div>                            
             </div>
+            <div class="stack-list mt-4">
+                <span class="tag">Ansible</span><span class="tag">Shell Script</span>
+                <span class="tag">Jenkins</span><span class="tag">Atlantis</span><span class="tag">Azure DevOps</span>
+                <span class="tag">Harness</span><span class="tag">Concourse</span><span class="tag">Tekton</span>
+                <span class="tag">TypeScript</span><span class="tag">Next.js</span><span class="tag">React Native</span><span class="tag">Supabase</span>
+            </div>
         </div>
     </section>
     <!-- End of Sectoin -->
+
+    <!-- Contact section -->
+    <section id="contact" class="section">
+        <div class="container text-center">
+            <h6 class="section-title mb-4">CONTATO</h6>
+            <p class="mb-4">Tem um projeto, um problema de infraestrutura ou quer conversar sobre consultoria? Fale comigo.</p>
+            <a class="btn btn-primary rounded" href="https://www.linkedin.com/in/kessix/" target="_blank" rel="noopener">LINKEDIN</a>
+            <a class="btn btn-dark rounded" href="https://github.com/kessix" target="_blank" rel="noopener">GITHUB</a>
+        </div>
+    </section>
+
 
     <!-- Page Footer -->
     <footer class="page-footer">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-sm-6">
-                    <p>Copyright <script>document.write(new Date().getFullYear())</script> &copy; <a href="http://www.devcrud.com" target="_blank">DevCRUD</a></p>
+                    <p>Copyright <script>document.write(new Date().getFullYear())</script> &copy; Kessi Diones · tema Steller por <a href="http://www.devcrud.com" target="_blank" rel="noopener">DevCRUD</a></p>
                 </div>
                 <div class="col-sm-6">
                     <div class="socials">
