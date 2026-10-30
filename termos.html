@@ -33,30 +33,74 @@
         </div>
     </div>
 </header>
-<main class="container legal">
-    <h1>Termos de Uso</h1>
-    <p class="updated">Última atualização: 30 de outubro de 2026</p>
-
-<h4>1. Quem somos</h4>
+<main class="legal-page">
+<div class="container">
+    <a class="back-link" href="index.html">&larr; Voltar ao início</a>
+    <header class="legal-hero">
+        <h1>Termos de Uso</h1>
+        <p class="updated">Última atualização: 30 de outubro de 2026</p>
+    </header>
+    <div class="legal-layout">
+        <aside class="legal-toc">
+            <h2 class="h-sm">Nesta página</h2>
+            <ol>
+<li><a href="#s1">1. Quem somos</a></li>
+<li><a href="#s2">2. Objeto do site</a></li>
+<li><a href="#s3">3. Uso do site</a></li>
+<li><a href="#s4">4. Propriedade intelectual</a></li>
+<li><a href="#s5">5. Serviços e produtos</a></li>
+<li><a href="#s6">6. Links externos</a></li>
+<li><a href="#s7">7. Limitação de responsabilidade</a></li>
+<li><a href="#s8">8. Privacidade</a></li>
+<li><a href="#s9">9. Alterações</a></li>
+<li><a href="#s10">10. Lei aplicável e foro</a></li>
+            </ol>
+            <p class="toc-other">Veja também: <a href="privacidade.html">Política de Privacidade</a></p>
+        </aside>
+        <article class="legal-body">
+<section id="s1">
+<h2>1. Quem somos</h2>
 <p>Este site é mantido pela <strong>Kessix Tech LTDA</strong>, CNPJ 60.008.405/0001-06, com sede na Avenida Santos Dumont, 2789, 506, Aldeota, Fortaleza/CE, CEP 60150-165. Contato: <a href="mailto:kessidiones.oliveira@gmail.com">kessidiones.oliveira@gmail.com</a> ou WhatsApp (85) 98736-8624.</p>
-<h4>2. Objeto do site</h4>
+</section>
+<section id="s2">
+<h2>2. Objeto do site</h2>
 <p>O site apresenta projetos de software (SaaS e sistemas) e serviços de consultoria em infraestrutura, DevOps, SRE e desenvolvimento. As informações têm caráter informativo e não constituem proposta comercial vinculante.</p>
-<h4>3. Uso do site</h4>
+</section>
+<section id="s3">
+<h2>3. Uso do site</h2>
 <p>Você concorda em usar o site de forma lícita, sem tentar comprometer sua segurança ou disponibilidade, e sem violar direitos de terceiros.</p>
-<h4>4. Propriedade intelectual</h4>
+</section>
+<section id="s4">
+<h2>4. Propriedade intelectual</h2>
 <p>Textos, marcas, logotipos e demais conteúdos são de titularidade da Kessix Tech LTDA ou usados com autorização, e não podem ser reproduzidos sem permissão prévia. O tema visual Steller é de DevCRUD, conforme sua licença.</p>
-<h4>5. Serviços e produtos</h4>
+</section>
+<section id="s5">
+<h2>5. Serviços e produtos</h2>
 <p>A contratação de consultoria ou o uso de produtos como o ProBarber e o CARF ID são regidos por contrato ou termos próprios, que prevalecem sobre estes Termos em caso de conflito. Projetos descritos como "em desenvolvimento" ou "em planejamento" podem mudar ou não ser lançados.</p>
-<h4>6. Links externos</h4>
+</section>
+<section id="s6">
+<h2>6. Links externos</h2>
 <p>O site pode apontar para páginas de terceiros (LinkedIn, GitHub, Medium, entre outras). Não controlamos nem respondemos pelo conteúdo ou pelas práticas dessas páginas.</p>
-<h4>7. Limitação de responsabilidade</h4>
+</section>
+<section id="s7">
+<h2>7. Limitação de responsabilidade</h2>
 <p>Empenhamo-nos em manter o conteúdo correto e o site disponível, mas ele é fornecido "no estado em que se encontra", sem garantia de disponibilidade contínua ou ausência de erros, nos limites permitidos pela lei.</p>
-<h4>8. Privacidade</h4>
+</section>
+<section id="s8">
+<h2>8. Privacidade</h2>
 <p>O tratamento de dados pessoais está descrito na <a href="privacidade.html">Política de Privacidade</a>.</p>
-<h4>9. Alterações</h4>
+</section>
+<section id="s9">
+<h2>9. Alterações</h2>
 <p>Podemos atualizar estes Termos a qualquer momento. A versão vigente é a publicada nesta página, com a data da última atualização.</p>
-<h4>10. Lei aplicável e foro</h4>
+</section>
+<section id="s10">
+<h2>10. Lei aplicável e foro</h2>
 <p>Estes Termos são regidos pelas leis brasileiras. Fica eleito o foro da Comarca de Fortaleza/CE, ressalvado o foro do domicílio do consumidor quando a lei assim determinar.</p>
+</section>
+        </article>
+    </div>
+</div>
 </main>
 <footer class="site-footer">
     <div class="container">
@@ -98,5 +142,6 @@
     </div>
 </footer>
 <script>document.querySelectorAll(".nav-links a").forEach(function(a){a.addEventListener("click",function(){var l=document.getElementById("nav-links");l.classList.remove("open");var t=document.querySelector(".nav-toggle");if(t)t.setAttribute("aria-expanded","false")})})</script>
+<script>(function(){var l=document.querySelectorAll(".legal-toc a"),s=document.querySelectorAll(".legal-body section");if(!("IntersectionObserver" in window))return;var o=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){l.forEach(function(a){a.classList.toggle("active",a.getAttribute("href")==="#"+x.target.id)})}})},{rootMargin:"-80px 0px -65% 0px"});s.forEach(function(x){o.observe(x)})})()</script>
 </body>
 </html>

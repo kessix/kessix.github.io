@@ -1,24 +1,12 @@
-@@@ --- @@@ @@@ --- @@@ @@@ --- @@@ @@@ --- @@@ @@@ --- @@@ @@@ --- @@@
+# Kessix Tech — site institucional e portfólio
 
-Custom by Kessix for Personal and Professional Blog
+Site estático publicado no GitHub Pages: projetos (SaaS e sistemas), consultoria, stack, contato, Termos de Uso e Política de Privacidade.
 
-@@@ --- @@@ @@@ --- @@@ @@@ --- @@@ @@@ --- @@@ @@@ --- @@@ @@@ --- @@@
+- `index.html`, `termos.html`, `privacidade.html`: páginas
+- `assets/css/site.css`: estilos (sem frameworks), com tema claro/escuro
+- `assets/imgs/`: logo, favicons, foto e ícones de tecnologias
+- `assets/vendors/themify-icons/`: ícones de fonte ([Themify Icons](https://themify.me/themify-icons))
 
-Steller Free Bootstrap landing page for personal and commercial use. Designed with ♥️ and creativity by Devcrud.com 
+Ícones de tecnologias: [devicon](https://devicon.dev) e [Simple Icons](https://simpleicons.org).
 
-Product Page: https://wwww.devcrud.com/
-
-Credits:
-
-    Demo Images:
-        Unsplash:       (https://www.unsplash.com)
-
-    Icons:
-		Themify Icons (https://themify.me/themify-icons)
-
-	Other:
-		jQuery (https://www.jquery.com)
-		Bootstrap (https://www.getbootstrap.com)
-		Bootstrap Affix (http://getbootstrap.com/javascript/#affix) 
-
-@@@ --- @@@ @@@ --- @@@ @@@ --- @@@ @@@ --- @@@ @@@ --- @@@ @@@ --- @@@
+Para ver localmente: `python3 -m http.server` e abrir http://localhost:8000.
