@@ -165,3 +165,10 @@ body { overflow-x: hidden; }
 .terminal .cur { display: inline-block; width: 8px; height: 1em; background: #3fb950; vertical-align: text-bottom; animation: blink 1.1s steps(1) infinite; }
 @media (prefers-reduced-motion: reduce) { .terminal .cur { animation: none; } }
 @media (max-width: 900px) { .hero .container { grid-template-columns: 1fr; } .terminal { max-width: 440px; width: 100%; margin: 0 auto; text-align: left; } }
+
+/* Brand accent inside headings */
+h1 .tech, h2 .tech, h3 .tech, h4 .tech { color: #456aff; }
+
+.stack-group { margin-bottom: 32px; }
+.stack-group:last-child { margin-bottom: 0; }
+.stack-group .h-sm { margin-bottom: 12px; }
