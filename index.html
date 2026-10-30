@@ -7,14 +7,17 @@
     <meta name="author" content="Kessi Diones">
     <meta name="theme-color" content="#2456e6">
     <title>Kessix Tech — SaaS, Sistemas e Consultoria</title>
-    <link rel="icon" href="assets/imgs/kessix.jpg">
+    <link rel="icon" href="assets/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/imgs/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/imgs/favicon-192.png">
+    <link rel="apple-touch-icon" href="assets/imgs/apple-touch-icon.png">
     <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
     <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
 <header class="site-nav">
     <div class="container">
-        <a class="brand" href="#">Kessix<span>Tech</span></a>
+        <a class="brand" href="#"><img class="brand-logo" src="assets/imgs/logo.png" alt="" width="36" height="36">Kessix <span>Tech</span></a>
         <button class="nav-toggle" aria-label="Abrir menu" aria-expanded="false" onclick="var l=document.getElementById('nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',o)">&#9776;</button>
         <ul class="nav-links" id="nav-links">
             <li><a href="#about">Sobre</a></li>
@@ -37,11 +40,23 @@
                 <a class="btn btn-primary" href="#projects">Ver projetos</a>
                 <a class="btn btn-ghost" href="#contact">Falar sobre consultoria</a>
             </div>
-            <ul class="facts">
-                <li><strong>Cloud Native</strong>AWS, Kubernetes, Terraform</li>
-                <li><strong>5 certificações</strong>CKA, AWS, GitLab, Harness, LPIC-1</li>
-                <li><strong>Produtos próprios</strong>ProBarber e CARF ID</li>
-            </ul>
+        </div>
+        <div class="terminal" aria-hidden="true">
+            <div class="term-bar"><i></i><i></i><i></i><span>kessix@tech: ~</span></div>
+<pre><span class="p">$</span> kessix --stack
+<span class="k">cloud</span>   aws · kubernetes · terraform
+<span class="k">code</span>    go · typescript · react native
+<span class="k">ops</span>     ci/cd · gitops · linux
+
+<span class="p">$</span> kessix --certs
+<span class="ok">✓</span> cka  <span class="ok">✓</span> aws  <span class="ok">✓</span> gitlab
+<span class="ok">✓</span> harness  <span class="ok">✓</span> lpic-1
+
+<span class="p">$</span> kessix --projects
+<span class="k">probarber</span>  saas · mobile
+<span class="k">carf-id</span>    controle de acesso
+
+<span class="p">$</span> <span class="cur"></span></pre>
         </div>
     </div>
 </section>
@@ -97,8 +112,33 @@
 <section class="section" id="stack">
     <div class="container">
         <div class="section-head"><span class="eyebrow">Stack</span><h2>Tecnologias do dia a dia</h2></div>
-        <div class="logos"><div class="logo"><img class="logo-img" src="assets/imgs/tux.png" alt="">GNU/Linux</div><div class="logo"><img class="logo-img" src="assets/imgs/gopher.png" alt="">Go</div><div class="logo"><img class="logo-img" src="assets/imgs/k8s.png" alt="">Kubernetes</div><div class="logo"><img class="logo-img" src="assets/imgs/docker.png" alt="">Docker</div><div class="logo"><img class="logo-img" src="assets/imgs/aws.png" alt="">AWS</div><div class="logo"><img class="logo-img" src="assets/imgs/terraform.png" alt="">Terraform</div><div class="logo"><img class="logo-img" src="assets/imgs/postgres.png" alt="">PostgreSQL</div><div class="logo"><img class="logo-img" src="assets/imgs/git.png" alt="">Git</div></div>
-        <div class="chips"><span class="tag">Ansible</span><span class="tag">Shell Script</span><span class="tag">Jenkins</span><span class="tag">Atlantis</span><span class="tag">Azure DevOps</span><span class="tag">Harness</span><span class="tag">Concourse</span><span class="tag">Tekton</span><span class="tag">GitLab CI</span><span class="tag">TypeScript</span><span class="tag">Next.js</span><span class="tag">React Native</span><span class="tag">Supabase</span></div>
+        <div class="logos">
+<div class="logo"><img class="logo-img" src="assets/imgs/tux.png" alt="" loading="lazy">GNU/Linux</div>
+<div class="logo"><img class="logo-img" src="assets/imgs/gopher.png" alt="" loading="lazy">Go</div>
+<div class="logo"><img class="logo-img" src="assets/imgs/k8s.png" alt="" loading="lazy">Kubernetes</div>
+<div class="logo"><img class="logo-img" src="assets/imgs/docker.png" alt="" loading="lazy">Docker</div>
+<div class="logo"><img class="logo-img" src="assets/imgs/aws.png" alt="" loading="lazy">AWS</div>
+<div class="logo"><img class="logo-img" src="assets/imgs/terraform.png" alt="" loading="lazy">Terraform</div>
+<div class="logo"><img class="logo-img" src="assets/imgs/postgres.png" alt="" loading="lazy">PostgreSQL</div>
+<div class="logo"><img class="logo-img mono" src="assets/imgs/tech/github.svg" alt="" loading="lazy">GitHub</div>
+<div class="logo"><img class="logo-img " src="assets/imgs/tech/gitlab.svg" alt="" loading="lazy">GitLab CI</div>
+<div class="logo"><img class="logo-img " src="assets/imgs/tech/jenkins.svg" alt="" loading="lazy">Jenkins</div>
+<div class="logo"><img class="logo-img " src="assets/imgs/tech/azure.svg" alt="" loading="lazy">Azure DevOps</div>
+<div class="logo"><img class="logo-img " src="assets/imgs/tech/ansible.svg" alt="" loading="lazy">Ansible</div>
+<div class="logo"><img class="logo-img mono" src="assets/imgs/tech/bash.svg" alt="" loading="lazy">Shell Script</div>
+<div class="logo"><img class="logo-img " src="assets/imgs/tech/python.svg" alt="" loading="lazy">Python</div>
+<div class="logo"><img class="logo-img " src="assets/imgs/tech/typescript.svg" alt="" loading="lazy">TypeScript</div>
+<div class="logo"><img class="logo-img " src="assets/imgs/tech/react.svg" alt="" loading="lazy">React / Native</div>
+<div class="logo"><img class="logo-img mono" src="assets/imgs/tech/expo.svg" alt="" loading="lazy">Expo</div>
+<div class="logo"><img class="logo-img mono" src="assets/imgs/tech/nextjs.svg" alt="" loading="lazy">Next.js</div>
+<div class="logo"><img class="logo-img " src="assets/imgs/tech/nestjs.svg" alt="" loading="lazy">NestJS</div>
+<div class="logo"><img class="logo-img " src="assets/imgs/tech/supabase.svg" alt="" loading="lazy">Supabase</div>
+<div class="logo"><img class="logo-img " src="assets/imgs/tech/tekton.svg" alt="" loading="lazy">Tekton</div>
+<div class="logo"><img class="logo-img " src="assets/imgs/tech/concourse.svg" alt="" loading="lazy">Concourse</div>
+<div class="logo"><span class="badge-logo">H</span>Harness</div>
+<div class="logo"><span class="badge-logo">A</span>Atlantis</div>
+</div>
+
     </div>
 </section>
 
@@ -117,8 +157,8 @@
     <div class="container">
         <div class="footer-grid">
             <div>
-                <a class="brand" href="index.html">Kessix<span>Tech</span></a>
-                <p style="margin-top:12px;max-width:360px">SaaS, sistemas e consultoria em cloud, Kubernetes e DevOps.</p>
+                <a class="brand" href="index.html"><img class="brand-logo" src="assets/imgs/logo.png" alt="" width="36" height="36">Kessix <span>Tech</span></a>
+                <p style="margin-top:12px;max-width:360px">Sistemas multiplataforma, apps mobile, open source, cloud native, consultoria em infraestrutura e DevOps.</p>
                 <p style="margin-top:16px"><strong style="color:var(--ink)">Kessix Tech LTDA</strong><br>CNPJ 60.008.405/0001-06</p>
                 <p>Avenida Santos Dumont, 2789, 506<br>Aldeota · Fortaleza/CE · CEP 60150-165</p>
             </div>
